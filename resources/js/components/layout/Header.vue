@@ -2,17 +2,21 @@
   <el-header style="display: flex; height: 57px;">
     <nav class="main-header navbar d-flex align-items-center justify-content-between">
       <div
-          @click="toggleCollapse()"
-          @keydown="toggleCollapse()"
+        @click="toggleCollapse()"
+        @keydown="toggleCollapse()"
       >
-        <em :class="['fas fa-bars',  { rotate: toggled }, 'burger']"></em>
+        <em :class="['fas fa-bars', { rotate: toggled }, 'burger']" />
       </div>
       <el-dropdown @command="handleCommand">
         <span class="currentUser">Admin</span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="profile">Профиль</el-dropdown-item>
-            <el-dropdown-item command="exit">Выход</el-dropdown-item>
+            <el-dropdown-item command="profile">
+              Профиль
+            </el-dropdown-item>
+            <el-dropdown-item command="exit">
+              Выход
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

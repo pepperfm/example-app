@@ -2,7 +2,7 @@
   <div class="login">
     <el-card class="text-center">
       <img
-        src="../../../../public/favicon.ico"
+        src="../../../../public/logo.png"
         alt="LOGO"
       >
       <h2>Example App</h2>
@@ -18,7 +18,7 @@
             v-model="loginForm.username"
             placeholder="Email"
             prefix-icon="Link"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -26,7 +26,7 @@
             placeholder="Пароль"
             type="password"
             prefix-icon="Lock"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item>
           <el-button
@@ -34,7 +34,8 @@
             class="login-button"
             native-type="submit"
             type="primary"
-          >Войти
+          >
+            Войти
           </el-button>
         </el-form-item>
       </el-form>

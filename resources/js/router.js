@@ -4,10 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DefaultHeader from '@layout/Header.vue'
 import DefaultAside from '@layout/MainAside.vue'
 
-import Login from '@auth/Login.vue'
+import Login from '@/components/auth/Login.vue'
 
 import Main from '@/components/MainPage.vue'
-
 
 const routes = [
   // {

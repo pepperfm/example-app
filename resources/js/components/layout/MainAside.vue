@@ -86,7 +86,7 @@
             index="2"
             @click="toRoute('')"
           >
-            <em class="fas fa-address-card"></em>
+            <em class="fas fa-address-card" />
             <span
               v-if="!$store.state.asideState.collapsed"
               class="el-menu-title"
@@ -97,7 +97,7 @@
             index="3"
             @click="toRoute('')"
           >
-            <em class="fas fa-comments"></em>
+            <em class="fas fa-comments" />
             <span
               v-if="!$store.state.asideState.collapsed"
               class="el-menu-title"
@@ -108,13 +108,14 @@
             index="3"
             @click="toRoute('')"
           >
-            <em class="fas fa-comments"></em>
+            <em class="fas fa-comments" />
             <span
               v-if="!$store.state.asideState.collapsed"
               class="el-menu-title"
             >Command 3</span>
           </el-menu-item>
         </div>
+      </el-menu>
     </el-scrollbar>
   </el-aside>
 </template>
