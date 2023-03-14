@@ -1,55 +1,92 @@
-version: '3'
+version: "3.9"
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.2
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    mysql:
+        image: mysql:8.0.30
+        container_name: ea-db
+        working_dir: /var/www/example-app
+        command: --default-authentication-plugin=mysql_native_password
         volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
+            - mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 0
+            PMA_HOST: mysql
+        ports:
+            - "${CUSTOM_DB_PORT:-3306}:3306"
+        restart: unless-stopped
+
+    mysql-testing:
+        image: mysql:8.0.30
+        container_name: ea-db-testing
+        environment:
+            MYSQL_DATABASE: ${TESTING_DB_DATABASE}
+            MYSQL_USER: ${TESTING_DB_PASSWORD}
+            MYSQL_PASSWORD: ${TESTING_DB_USERNAME}
+            MYSQL_ALLOW_EMPTY_PASSWORD: 0
+            PMA_HOST: mysql
+        volumes:
+            - ./:/var/www/example-app
+            - mysql-testing:/var/lib/mysql
+        ports:
+            - "${CUSTOM_TESTING_DB_PORT:-3307}:3306"
+        restart: unless-stopped
+
+    nginx:
+        image: nginx:stable-alpine
+        container_name: ea-nginx
+        working_dir: /var/www/example-app
+        volumes:
+            - ./:/var/www/example-app
+            - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - "${CUSTOM_NGINX_PORT:-80}:80"
+        depends_on:
+            - php
+        restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+
+    php:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            args:
+                DOCKER_USER_ID: ${DOCKER_USER_ID}
+                DOCKER_GROUP_ID: ${DOCKER_GROUP_ID}
+        container_name: ea-php
+        working_dir: /var/www/example-app
+        volumes:
+            - ./:/var/www/example-app
+            - ./docker/php/php-ini-overrides.ini:/usr/local/etc/php/conf.d/docker-php-ext-overrides.ini
         depends_on:
             - mysql
-    mysql:
-        image: 'mysql/mysql-server:8.0'
+            - mysql-testing
+        restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+#        command: sh -c "php artisan migrate:fresh --seed --env=testing"
+
+    node:
+        build:
+            context: .
+            dockerfile: docker/node/Dockerfile
+            args:
+                DOCKER_USER_ID: ${DOCKER_USER_ID}
+                DOCKER_GROUP_ID: ${DOCKER_GROUP_ID}
+                CUSTOM_VITE_PORT: '${CUSTOM_VITE_PORT:-5173}'
+        container_name: ea-node
+        working_dir: /var/www/example-app
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            - '${CUSTOM_VITE_PORT:-5173}:5173'
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${DB_PASSWORD}'
-            retries: 3
-            timeout: 5s
+            - ./:/var/www/example-app
+        restart: unless-stopped
+
 networks:
-    sail:
-        driver: bridge
+    default:
+
 volumes:
-    sail-mysql:
-        driver: local
+    mysql:
+    mysql-testing:

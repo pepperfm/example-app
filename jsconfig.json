@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["resources/js/*"],
+      "@layout/*": ["resources/js/components/layout/*"],
+      "@modules/*": ["resources/js/store/modules/*"],
+
+      "@partials/*": ["resources/js/components/_partials/*"],
+      "@mixins/*": ["resources/js/components/_mixins/*"],
+
+      "@auth/*": ["resources/js/components/auth/*"]
+    }
+  }
+}
