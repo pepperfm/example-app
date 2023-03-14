@@ -42,9 +42,9 @@ env:
 init: env up install start
 
 php-bash:
-	docker exec -it --user=www-data pm-php bash
+	docker exec -it --user=www-data ea-php bash
 node-sh:
-	docker exec -it --user=node pm-node sh
+	docker exec -it --user=node ea-node sh
 
 #-----------------------------------------------------------
 # Database
