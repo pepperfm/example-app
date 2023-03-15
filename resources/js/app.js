@@ -40,8 +40,8 @@ async function init() {
       withCredentials: true,
       headers,
     })
-    window.$identity = new Identity(response.data.data.user)
-    app.config.globalProperties.$identity = new Identity(response.data.data.user)
+    window.$identity = new Identity(response.data.user)
+    app.config.globalProperties.$identity = new Identity(response.data.user)
   } catch (e) {
     if (!e.response) {
       throw e

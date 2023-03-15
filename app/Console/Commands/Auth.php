@@ -26,12 +26,19 @@ class Auth extends Command
      */
     public function handle(): void
     {
-        $user = User::firstWhere(['email' => $this->ask('Input email:')]);
+        // $user = User::firstWhere(['email' => $this->ask('Input email:')]);
+        $user = User::firstWhere(['email' => 'admin@gmail.com']);
 
-        if (!$user || !\Hash::check($this->secret('Input password:'), $user->password)) {
-            $this->error('User not found');
-        } else {
-            $this->info($user->createToken('Bearer')->plainTextToken);
-        }
+        // if (!$user || !\Hash::check($this->secret('Input password:'), $user->password)) {
+        //     $this->error('User not found');
+        // } else {
+        $user->tokens()->delete();
+            $this->info(
+                $user->createToken(
+                    'Bearer',
+                    // expiresAt: \Carbon\Carbon::now()->addMinutes(5)
+                )->plainTextToken
+            );
+        // }
     }
 }

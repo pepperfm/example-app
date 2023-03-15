@@ -33,29 +33,23 @@ export default {
     return {
       time: '',
       activeIndex: '1',
-      pathName: 'Psych Manager',
+      pathName: 'Example App',
       toggled: false,
       toggled2: true,
     }
   },
 
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({ user: 'user/user' }),
   },
   async mounted() {
     await this.getUser()
   },
-  // async created() {
-  //   this.$root.$on("set-path-name", (obj) => {
-  //     this.pathName = obj.name;
-  //     this.activeIndex = obj.activeIndex ? obj.activeIndex : "1";
-  //     if (obj.active) {
-  //       this.activeIndex = "active";
-  //     }
-  //   });
-  // },
   methods: {
-    ...mapActions({}),
+    ...mapActions({
+      getUser: 'user/getUser',
+      collapse: 'asideState/collapse',
+    }),
 
     toggleCollapse() {
       this.toggled = !this.toggled

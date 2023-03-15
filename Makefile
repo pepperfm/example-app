@@ -39,7 +39,7 @@ rebuild: build up
 env:
 	[ -f .env ] && echo .env exists || cp .env.example .env
 
-init: env up install start
+init: env up build install start
 
 php-bash:
 	docker exec -it --user=www-data ea-php bash

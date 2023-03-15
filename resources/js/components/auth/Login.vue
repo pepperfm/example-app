@@ -3,7 +3,7 @@
     <el-card class="text-center">
       <img
         src="../../../../public/logo.png"
-        alt="LOGO"
+        alt="logo"
       >
       <h2>Example App</h2>
       <el-form
@@ -13,18 +13,10 @@
         :rules="rules"
         @submit.prevent="auth()"
       >
-        <el-form-item prop="username">
+        <el-form-item prop="token">
           <el-input
-            v-model="loginForm.username"
-            placeholder="Email"
-            prefix-icon="Link"
-          />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model="loginForm.password"
-            placeholder="Пароль"
-            type="password"
+            v-model="loginForm.token"
+            placeholder="token"
             prefix-icon="Lock"
           />
         </el-form-item>
@@ -47,31 +39,17 @@
 export default {
   name: 'MainLogin',
   data() {
-    const validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password'))
-      } else if (value.length < 6) {
-        callback(new Error('Password length should more then 5 characters'))
-      } else {
-        callback()
-      }
-    }
     return {
       actions: {
         auth: '/api/v1/login',
       },
       loginForm: {
-        username: '',
-        password: '',
-        grant_type: 'password',
+        token: '',
       },
       loading: false,
       rules: {
-        username: [
-          { type: 'email', trigger: 'submit', required: true },
-        ],
-        password: [
-          { validator: validatePass, trigger: 'submit' },
+        token: [
+          { type: 'string', trigger: 'submit', required: true },
         ],
       },
     }
@@ -89,7 +67,11 @@ export default {
     async identityLogin() {
       this.loading = true
       try {
-        const response = await this.$http.post(this.actions.auth, this.loginForm)
+        const response = await this.$http.post(this.actions.auth, this.loginForm, {
+          headers: {
+            Authorization: `Bearer ${this.loginForm.token}`
+          }
+        })
         localStorage.setItem('accessToken', response.data.access_token)
         window.$identity.isGuest = false
         const redirect = await this.$route.query.redirect ? this.$route.query.redirect : '/'

@@ -7,6 +7,7 @@ import DefaultAside from '@layout/MainAside.vue'
 import Login from '@/components/auth/Login.vue'
 
 import Main from '@/components/MainPage.vue'
+import StoreData from '@/components/StoreData/Form.vue'
 
 const routes = [
   // {
@@ -26,7 +27,13 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    meta: { auth: false, menuitem: '1' },
+    meta: { auth: false, menuitem: '0' },
+  },
+  {
+    path: '/store-data',
+    name: 'store-data',
+    components: { aside: DefaultAside, header: DefaultHeader, default: StoreData },
+    meta: { auth: true, menuitem: '1' },
   },
 ]
 

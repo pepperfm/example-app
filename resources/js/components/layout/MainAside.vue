@@ -83,8 +83,8 @@
           </el-menu-item>
 
           <el-menu-item
-            index="2"
-            @click="toRoute('')"
+            index="1"
+            @click="toRoute('store-data')"
           >
             <em class="fas fa-address-card" />
             <span
@@ -94,7 +94,7 @@
           </el-menu-item>
 
           <el-menu-item
-            index="3"
+            index="2"
             @click="toRoute('')"
           >
             <em class="fas fa-comments" />
@@ -120,33 +120,9 @@
   </el-aside>
 </template>
 <script>
-// import { mapGetters, mapActions, mapState } from 'vuex'
-// import UserFiltersMixin from '@admin-mixins/UserFiltersMixin.js'
+
 export default {
-  // data() {
-  //   return {
-  //     collapsed: false,
-  //   };
-  // },
-  // mixins: [UserFiltersMixin],
-  // async created() {
-  //   // this.clearUserFilters('aside')
-  //   // let filters = await this.getUserFilters('aside')
-  //
-  //   // this.collapsed = filters.collapsed
-  //
-  //   this.$root.$on("collapse-toggle", () => {
-  //     this.collapsed = !this.collapsed;
-  //     // this.setUserFilters('aside', { collapsed: this.collapsed })
-  //   });
-  // },
   methods: {
-    // handleOpen() {
-    //   this.isCollapse = false;
-    // },
-    // handleClose() {
-    //   this.isCollapse = true;
-    // },
     toRoute(alias) {
       this.$router.push({ name: alias })
     },
