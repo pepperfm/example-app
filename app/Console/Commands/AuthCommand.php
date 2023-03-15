@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class Auth extends Command
+class AuthCommand extends Command
 {
     /**
      * The name and signature of the console command.

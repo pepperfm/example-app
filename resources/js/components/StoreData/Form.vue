@@ -14,7 +14,10 @@
             clearable
           />
         </el-form-item>
-        <el-form-item label="Request method">
+        <el-form-item
+          label="Request method"
+          prop="method"
+        >
           <el-select
             v-model="form.method"
             class="m-2 w-100"
@@ -69,6 +72,9 @@ export default {
       rules: {
         data: [
           { validator: validatePass, trigger: 'submit' },
+        ],
+        method: [
+          { required: true, trigger: 'submit' },
         ],
       },
       actions: {
