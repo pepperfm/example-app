@@ -14,9 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return response()->json([
-        'user' => $request->user(),
-    ]);
+Route::group([
+    'middleware' => 'auth:sanctum'
+], static function () {
+    Route::get('/user', fn(Request $request) => response()->json(['user' => $request->user()]));
+
+    Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
+
+    Route::get('store-data', [\App\Http\Controllers\DataController::class, 'store']);
+    Route::post('store-data', [\App\Http\Controllers\DataController::class, 'store']);
 });
-Route::middleware('auth:sanctum')->post('login', [\App\Http\Controllers\AuthController::class, 'login']);

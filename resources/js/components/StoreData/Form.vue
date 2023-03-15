@@ -2,7 +2,9 @@
   <el-row :gutter="24">
     <el-col :span="10">
       <el-form
+        ref="loginForm"
         :model="form"
+        :rules="rules"
         label-position="left"
         label-width="120px"
       >
@@ -27,7 +29,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="data">
           <el-input
             v-model="form.data"
             :rows="10"
@@ -56,9 +58,21 @@
 export default {
   name: "StoreDataForm",
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value.length >= 1024) {
+        callback(new Error('Data is too long'))
+      } else {
+        callback()
+      }
+    }
     return {
+      rules: {
+        data: [
+          { validator: validatePass, trigger: 'submit' },
+        ],
+      },
       actions: {
-
+        rest: '/api/v1/store-data'
       },
       form: {
         token: '',
@@ -72,19 +86,33 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       let response
-      if (this.form.method === 'get') {
-        response = this.$http.get()
-      }
-      if (this.form.method === 'post') {
-        response = this.$http.post()
-      }
+      await this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          if (this.form.method === 'get') {
+            response = this.$http.get(this.actions.rest, {
+                headers: {
+                    Authorisation: `Bearer ${this.form.token}`
+                },
+                params: { data: this.form.data },
+            })
+          }
+          if (this.form.method === 'post') {
+            response = this.$http.post(this.actions.rest, { data: JSON.parse(this.form.data) }, {
+                headers: {
+                    Authorisation: `Bearer ${this.form.token}`
+                }
+            })
+          }
+        } else {
+          this.$message.error('Data is too long')
+        }
+      })
     },
     toJson(value) {
-      console.log(value)
-      let parsed= JSON.parse(this.form.data);
-      this.form.data = JSON.stringify(parsed, undefined, 4);
+      let parsed = JSON.parse(value)
+      this.form.data = JSON.stringify(parsed, undefined, 4)
     },
   },
 }
