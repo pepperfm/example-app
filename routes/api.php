@@ -21,6 +21,6 @@ Route::group([
 
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
 
-    Route::get('store-data', [\App\Http\Controllers\DataController::class, 'store']);
-    Route::post('store-data', [\App\Http\Controllers\DataController::class, 'store']);
+    Route::get('store-data', [\App\Http\Controllers\EntityController::class, 'store']);
+    Route::post('store-data', [\App\Http\Controllers\EntityController::class, 'store']);
 });
