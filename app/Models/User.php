@@ -54,4 +54,12 @@ class User extends Authenticatable implements MustVerifyEmail
             set: static fn($value) => Hash::make((string) $value, [PASSWORD_DEFAULT])
         );
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function entities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Entity::class);
+    }
 }

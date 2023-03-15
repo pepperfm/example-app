@@ -1,0 +1,183 @@
+<template>
+  <el-row :gutter="24">
+    <el-col :span="10">
+      <el-form
+        ref="loginForm"
+        :model="form"
+        :rules="rules"
+        label-position="left"
+        label-width="200px"
+      >
+        <el-form-item label="Token">
+          <el-input
+            v-model="form.token"
+            clearable
+            @change="getOptions"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Request method"
+          prop="method"
+        >
+          <el-select
+            v-model="form.method"
+            class="m-2 w-100"
+            clearable
+            placeholder="Select request method"
+          >
+            <el-option
+              v-for="item in request_types_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="Entity id"
+          prop="entity_id"
+        >
+          <el-select
+            v-model="form.entity_id"
+            class="m-2 w-100"
+            clearable
+            placeholder="Select entity id"
+            @change="show"
+          >
+            <el-option
+              v-for="item in entity_ids"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          prop="data"
+          label="Json"
+        >
+          <el-input
+            v-model="form.data"
+            :rows="10"
+            clearable
+            resize="vertical"
+            type="textarea"
+            placeholder="Json data"
+            @change="toJson"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="onSubmit"
+          >
+            Update
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
+    <el-col :span="14" />
+  </el-row>
+</template>
+
+<script>
+export default {
+  name: "UpdateEntityForm",
+  data() {
+    const validatePass = (rule, value, callback) => {
+      if (this.form.method === 'get' && value.length >= 1024) {
+        callback(new Error('Data is too long'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      rules: {
+        data: [
+          { validator: validatePass, trigger: 'submit' },
+        ],
+        method: [
+          { required: true, trigger: 'submit' },
+        ],
+      },
+      actions: {
+        rest: '/api/v1/entities',
+        getOptions: '/api/v1/entities/options',
+      },
+      form: {
+        token: '',
+        method: '',
+        data: '',
+        entity_id: '',
+      },
+      request_types_options: [
+        { label: 'GET', value: 'get' },
+        { label: 'POST', value: 'post' },
+      ],
+      entity_ids: []
+    }
+  },
+//  async created() {
+//
+//  },
+  methods: {
+    async onSubmit() {
+      let response
+      await this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          if (this.form.method === 'get') {
+            response = this.$http.get(`${this.actions.rest}/update/${this.form.entity_id}`, {}, {
+                headers: {
+                    Authorisation: `Bearer ${this.form.token}`
+                },
+                params: { data: this.form.data },
+            })
+          }
+          if (this.form.method === 'post') {
+            response = this.$http.post(`${this.actions.rest}/update/${this.form.entity_id}`,
+              {
+                data: JSON.parse(this.form.data)
+              },
+              {
+                headers: {
+                    Authorisation: `Bearer ${this.form.token}`
+                },
+            })
+          }
+        } else {
+          this.$message.error('Data is too long')
+        }
+      })
+    },
+    toJson(value) {
+      let parsed = JSON.parse(value)
+      this.form.data = JSON.stringify(parsed, undefined, 4)
+    },
+
+    async getOptions() {
+      let response = await this.$http.get(this.actions.getOptions, {
+        headers: {
+          Authorization: `Bearer ${this.form.token}`
+        }
+      })
+      this.entity_ids = response.data.entity_ids
+    },
+
+    async show() {
+      let response = await this.$http.get(`${this.actions.rest}/${this.form.entity_id}`, {
+        headers: {
+          Authorization: `Bearer ${this.form.token}`
+        },
+        params: {
+          entity_id: this.form.entity_id
+        },
+      })
+      this.form.data = JSON.stringify(response.data.json, undefined, 4)
+    },
+  },
+}
+</script>
+
+<style scoped>
+
+</style>

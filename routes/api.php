@@ -21,6 +21,16 @@ Route::group([
 
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
 
-    Route::get('store-data', [\App\Http\Controllers\EntityController::class, 'store']);
-    Route::post('store-data', [\App\Http\Controllers\EntityController::class, 'store']);
+    Route::group([
+        'prefix' => 'entities',
+        'as' => 'entities.'
+    ], static function () {
+        Route::get('store', [\App\Http\Controllers\EntityController::class, 'store']);
+        Route::post('store', [\App\Http\Controllers\EntityController::class, 'store']);
+
+        Route::get('options', [\App\Http\Controllers\EntityController::class, 'getOptions']);
+        Route::get('{entity}', [\App\Http\Controllers\EntityController::class, 'show']);
+        Route::get('update/{entity}', [\App\Http\Controllers\EntityController::class, 'update']);
+        Route::post('update/{entity}', [\App\Http\Controllers\EntityController::class, 'update']);
+    });
 });

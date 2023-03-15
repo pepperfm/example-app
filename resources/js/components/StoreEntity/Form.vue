@@ -32,7 +32,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="data">
+        <el-form-item
+          prop="data"
+          label="Json"
+        >
           <el-input
             v-model="form.data"
             :rows="10"
@@ -59,10 +62,10 @@
 
 <script>
 export default {
-  name: "StoreDataForm",
+  name: "UpdateEntityForm",
   data() {
     const validatePass = (rule, value, callback) => {
-      if (value.length >= 1024) {
+      if (this.form.method === 'get' && value.length >= 1024) {
         callback(new Error('Data is too long'))
       } else {
         callback()
@@ -78,7 +81,7 @@ export default {
         ],
       },
       actions: {
-        rest: '/api/v1/store-data'
+        rest: '/api/v1/store'
       },
       form: {
         token: '',

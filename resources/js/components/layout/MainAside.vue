@@ -84,7 +84,7 @@
 
           <el-menu-item
             index="1"
-            @click="toRoute('store-data')"
+            @click="toRoute('store-entity')"
           >
             <em class="fas fa-address-card" />
             <span
@@ -95,7 +95,7 @@
 
           <el-menu-item
             index="2"
-            @click="toRoute('')"
+            @click="toRoute('show-entity')"
           >
             <em class="fas fa-comments" />
             <span
