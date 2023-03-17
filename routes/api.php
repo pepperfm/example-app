@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\EntityController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,12 +27,16 @@ Route::group([
         'prefix' => 'entities',
         'as' => 'entities.'
     ], static function () {
-        Route::get('store', [\App\Http\Controllers\EntityController::class, 'store']);
-        Route::post('store', [\App\Http\Controllers\EntityController::class, 'store']);
+        Route::get('/', [EntityController::class, 'index']);
 
-        Route::get('options', [\App\Http\Controllers\EntityController::class, 'getOptions']);
-        Route::get('{entity}', [\App\Http\Controllers\EntityController::class, 'show']);
-        Route::get('update/{entity}', [\App\Http\Controllers\EntityController::class, 'update']);
-        Route::post('update/{entity}', [\App\Http\Controllers\EntityController::class, 'update']);
+        Route::get('store', [EntityController::class, 'store']);
+        Route::post('store', [EntityController::class, 'store']);
+
+        Route::get('options', [EntityController::class, 'getOptions']);
+        Route::get('{entity}', [EntityController::class, 'show']);
+        Route::get('update/{entity}', [EntityController::class, 'update']);
+        Route::post('update/{entity}', [EntityController::class, 'update']);
+
+        Route::get('{entity}/tree', [EntityController::class, 'showTree']);
     });
 });

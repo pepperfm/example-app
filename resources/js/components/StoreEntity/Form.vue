@@ -81,7 +81,7 @@ export default {
         ],
       },
       actions: {
-        rest: '/api/v1/store'
+        rest: '/api/v1/entities/store'
       },
       form: {
         token: '',

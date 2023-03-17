@@ -106,13 +106,13 @@
 
           <el-menu-item
             index="3"
-            @click="toRoute('')"
+            @click="toRoute('index')"
           >
             <em class="fas fa-comments" />
             <span
               v-if="!$store.state.asideState.collapsed"
               class="el-menu-title"
-            >Command 3</span>
+            >Table</span>
           </el-menu-item>
         </div>
       </el-menu>

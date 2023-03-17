@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Benchmark;
+use Illuminate\Support\Collection;
 
 use App\Http\Resources\EntityResource;
 
@@ -11,6 +12,15 @@ use App\Models\Entity;
 
 class EntityController
 {
+    public function index(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'entities' => EntityResource::collection(
+                Entity::query()->with('user')->get()
+            ),
+        ]);
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      *
@@ -101,5 +111,43 @@ class EntityController
                 ]
             ),
         ]);
+    }
+
+    public function showTree(Entity $entity)
+    {
+        $result = [];
+        foreach ($entity->data as $item) {
+            
+        }
+        $result = $this->loadChildren($entity->data);
+        dd($result);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function loadChildren(array $data): array
+    {
+        $result = [];
+        // foreach ($data as $item) {
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    $result[] = [
+                        'label' => $key,
+                        'children' => $value,
+                    ];
+                    $this->loadChildren($value);
+                } else {
+                    $result[] = [
+                        'label' => $key,
+                        'children' => []
+                    ];
+                }
+            }
+        // }
+
+        return $result;
     }
 }

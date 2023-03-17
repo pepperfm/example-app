@@ -9,6 +9,7 @@ import Login from '@/components/auth/Login.vue'
 import Main from '@/components/MainPage.vue'
 import StoreEntity from '@/components/StoreEntity/Form.vue'
 import ShowEntity from '@/components/UpdateEntity/Form.vue'
+import IndexEntity from '@/components/IndexEntity/Index.vue'
 
 const routes = [
   // {
@@ -41,6 +42,12 @@ const routes = [
       name: 'show-entity',
       components: { aside: DefaultAside, header: DefaultHeader, default: ShowEntity },
       meta: { auth: true, menuitem: '2' },
+  },
+  {
+      path: '/index',
+      name: 'index',
+      components: { aside: DefaultAside, header: DefaultHeader, default: IndexEntity },
+      meta: { auth: true, menuitem: '3' },
   },
 ]
 
