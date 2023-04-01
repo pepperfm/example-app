@@ -77,8 +77,9 @@ db-fresh:
 # Laravel
 install:
 	docker-compose stop
-	docker-compose run -u `id -u` --rm node npm i
+	#docker-compose run -u `id -u` --rm node npm i
 	docker-compose run -u `id -u` --rm php composer i
 	docker-compose run -u `id -u` --rm php php artisan key:generate
 	docker-compose run -u `id -u` --rm php php artisan migrate:fresh --seed
+	docker-compose run -u `id -u` --rm php php artisan l5-swagger:generate
 	docker-compose run -u `id -u` --rm php php artisan storage:link

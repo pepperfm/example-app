@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\EntityController;
+use App\Http\Controllers\{AuthController, ProductController};
 
 /*
 |--------------------------------------------------------------------------
@@ -16,27 +16,17 @@ use App\Http\Controllers\EntityController;
 |
 */
 
+/**
+ * @see https://api.postman.com/collections/7158931-01c5d9b8-e030-42ec-9490-9c40b38db861?access_key=PMAT-01GWZ7NSTPRF2FMSZAS2ZA9HXK
+ */
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
 Route::group([
-    'middleware' => 'auth:sanctum'
-], static function () {
-    Route::get('/user', fn(Request $request) => response()->json(['user' => $request->user()]));
+    'middleware' => 'auth:sanctum',
+], static function (): void {
+    Route::get('/user', static fn(Request $request) => response()->json(['user' => $request->user()]));
 
-    Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
-
-    Route::group([
-        'prefix' => 'entities',
-        'as' => 'entities.'
-    ], static function () {
-        Route::get('/', [EntityController::class, 'index']);
-
-        Route::get('store', [EntityController::class, 'store']);
-        Route::post('store', [EntityController::class, 'store']);
-
-        Route::get('options', [EntityController::class, 'getOptions']);
-        Route::get('{entity}', [EntityController::class, 'show']);
-        Route::get('update/{entity}', [EntityController::class, 'update']);
-        Route::post('update/{entity}', [EntityController::class, 'update']);
-
-        Route::get('{entity}/tree', [EntityController::class, 'showTree']);
-    });
+    Route::get('products', [ProductController::class, 'index']);
 });

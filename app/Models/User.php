@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -21,6 +23,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
+        'surname',
+        'patronymic',
+        'phone',
         'email',
         'password',
     ];
@@ -53,13 +58,5 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             set: static fn($value) => Hash::make((string) $value, [PASSWORD_DEFAULT])
         );
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function entities(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Entity::class);
     }
 }

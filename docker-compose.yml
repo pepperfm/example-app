@@ -20,14 +20,15 @@ services:
     mysql-testing:
         image: mysql:8.0.30
         container_name: ea-db-testing
+        working_dir: /var/www/example-app
+        command: --default-authentication-plugin=mysql_native_password
         environment:
             MYSQL_DATABASE: ${TESTING_DB_DATABASE}
             MYSQL_USER: ${TESTING_DB_PASSWORD}
             MYSQL_PASSWORD: ${TESTING_DB_USERNAME}
             MYSQL_ALLOW_EMPTY_PASSWORD: 0
-            PMA_HOST: mysql
+            PMA_HOST: mysql-testing
         volumes:
-            - ./:/var/www/example-app
             - mysql-testing:/var/lib/mysql
         ports:
             - "${CUSTOM_TESTING_DB_PORT:-3307}:3306"
@@ -68,21 +69,21 @@ services:
             - "host.docker.internal:host-gateway"
 #        command: sh -c "php artisan migrate:fresh --seed --env=testing"
 
-    node:
-        build:
-            context: .
-            dockerfile: docker/node/Dockerfile
-            args:
-                DOCKER_USER_ID: ${DOCKER_USER_ID}
-                DOCKER_GROUP_ID: ${DOCKER_GROUP_ID}
-                CUSTOM_VITE_PORT: '${CUSTOM_VITE_PORT:-5173}'
-        container_name: ea-node
-        working_dir: /var/www/example-app
-        ports:
-            - '${CUSTOM_VITE_PORT:-5173}:5173'
-        volumes:
-            - ./:/var/www/example-app
-        restart: unless-stopped
+#    node:
+#        build:
+#            context: .
+#            dockerfile: docker/node/Dockerfile
+#            args:
+#                DOCKER_USER_ID: ${DOCKER_USER_ID}
+#                DOCKER_GROUP_ID: ${DOCKER_GROUP_ID}
+#                CUSTOM_VITE_PORT: '${CUSTOM_VITE_PORT:-5173}'
+#        container_name: ea-node
+#        working_dir: /var/www/example-app
+#        ports:
+#            - '${CUSTOM_VITE_PORT:-5173}:5173'
+#        volumes:
+#            - ./:/var/www/example-app
+#        restart: unless-stopped
 
 networks:
     default:
